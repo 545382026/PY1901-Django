@@ -82,6 +82,7 @@ DATABASES = {
         # BASE_DIR 指项目根路径
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+
 }
 
 

@@ -6,6 +6,8 @@ from django.db import models
 class Bookinfo(models.Model):
     btitle = models.CharField(max_length=20)
     bpub_data = models.DateTimeField(auto_now=True)
+    def __str__(self):
+        return self.btitle
 
 
 class HeroInfo(models.Model):
@@ -14,6 +16,8 @@ class HeroInfo(models.Model):
     hcontent = models.CharField(max_length=50)
     # 外键 第一个参数为表名 第二个参数代表类型
     hbook = models.ForeignKey('BookInfo', on_delete=models.CASCADE)
+    def __str__(self):
+        return self.hname
 
 
 
