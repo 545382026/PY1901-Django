@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加英雄</title>
+</head>
+<body>
+    <form action="{% url 'booktest:addherohandler' %}" method="post">
+    	姓名: <input type="text" name='name' autocomplete="off"><br>
+        性别: 男 <input type="radio" value="1" name="sex" checked> 女 <input type="radio" value="0" name="sex" checked>
+        武功:<input type="text" name="content" autocomplete="off"><br>
+        <input type="hidden" value="{{ bookid }}" name="bookid">
+		<input type="submit" value="添加">
+    </form>
+</body>
+</html>

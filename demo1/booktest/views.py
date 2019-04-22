@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-from .models import Bookinfo,HeroInfo
+from django.http import HttpResponse, HttpResponseRedirect
+from .models import Bookinfo,HeroInfo, AreaInfo
 from django.template import loader
 # Create your views here.
 
@@ -17,9 +17,9 @@ def index(request):
     # 快捷方式
     return render(request,'booktest/index.html',con)
 
-def list(requset):
+def list(request):
     book = Bookinfo.objects.all()
-    return render(requset,'booktest/list.html',{'booklist':book})
+    return render(request,'booktest/list.html',{'booklist':book})
 
 def detail(request,id):
     # try:
@@ -30,6 +30,39 @@ def detail(request,id):
     #     return HttpResponse('错误id')
     book = Bookinfo.objects.get(pk=int(id))
     return render(request, 'booktest/detail.html', {'booklist':book})
+
+def delete(request,id):
+    Bookinfo.objects.get(pk=id).delete()
+    b1 = Bookinfo.objects.all()
+    # return render(request, 'booktest/list.html', {'booklist': b1})
+    # 重定向，刷新当前页面
+    return HttpResponseRedirect('/booktest/list',{'booktest': b1})
+    # return HttpResponse("删除成功")
+
+def addhero(request, id):
+    return render(request,'booktest/addhero.html', {'bookid': id})
+    # return HttpResponse("添加成功")
+
+def addherohandler(request):
+    name = request.POST['name']
+    gender = request.POST['sex']
+    content = request.POST['content']
+    bookid = request.POST['bookid']
+    print(name,gender,content,bookid)
+    book = Bookinfo.objects.get(pk=bookid)
+    hero = HeroInfo()
+    hero.hname = name
+    hero.hgender = gender
+    hero.hcontent = content
+    hero.hbook = book
+    hero.save()
+    return HttpResponseRedirect('/booktest/detail/'+str(bookid)+'/', {'booklist':book})
+
+def area(request):
+    area = AreaInfo.objects.get(pk=3)
+    return render(request, 'booktest/area.html', {'area':area})
+
+
 
 
 """

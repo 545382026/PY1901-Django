@@ -35,6 +35,13 @@ class HeroInfo(models.Model):
         return self.hbook
     book.short_description = '小说'
 
+class AreaInfo(models.Model):
+    atitle = models.CharField(max_length=20)
+    aparent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.atitle
+
+
 
 
 

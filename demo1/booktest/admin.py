@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Bookinfo, HeroInfo
+from .models import Bookinfo, HeroInfo, AreaInfo
 # Register your models here.
 # 关联注册
 class HerInfoInline(admin.StackedInline):
@@ -24,6 +24,9 @@ class HeroInfoAdmin(admin.ModelAdmin):
     list_per_page = 3
 
 admin.site.register(HeroInfo, HeroInfoAdmin)
+
+
+admin.site.register(AreaInfo)
 
 
 
