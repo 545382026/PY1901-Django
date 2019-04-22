@@ -33,10 +33,10 @@ def detail(request,id):
 
 def delete(request,id):
     Bookinfo.objects.get(pk=id).delete()
-    b1 = Bookinfo.objects.all()
+    # b1 = Bookinfo.objects.all()
     # return render(request, 'booktest/list.html', {'booklist': b1})
     # 重定向，刷新当前页面
-    return HttpResponseRedirect('/booktest/list',{'booktest': b1})
+    return HttpResponseRedirect('/booktest/list')
     # return HttpResponse("删除成功")
     # return redirect(reversed('booktest:list'),{'booklist':b1})
 
