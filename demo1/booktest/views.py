@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import Bookinfo,HeroInfo, AreaInfo
 from django.template import loader
@@ -38,6 +38,7 @@ def delete(request,id):
     # 重定向，刷新当前页面
     return HttpResponseRedirect('/booktest/list',{'booktest': b1})
     # return HttpResponse("删除成功")
+    # return redirect(reversed('booktest:list'),{'booklist':b1})
 
 def addhero(request, id):
     return render(request,'booktest/addhero.html', {'bookid': id})
