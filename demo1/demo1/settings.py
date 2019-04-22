@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    # 出路session中间键
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     # csrf 是跨站请求伪造
@@ -136,3 +137,25 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
+
+
+"""
+ 根据实现功能需要修改添加配置文件
+"""
+
+# 使用django默认表存储
+# SESSION_ENGINE='django.contrib.sessions.backends.db'
+
+# 使用内存， 关机之后会消失
+# SESSION_ENGINE='django.contrib.sessions.backends.cache'
+
+# 室友内存加数据库
+# SESSION_ENGINE='django.contrib.sessions.backends.cached_db'
+
+# 使用Redis存sessio信息
+SESSION_ENGINE = 'redis_sessions.session'
+SESSION_REDIS_HOST = 'localhost'
+SESSION_REDIS_PORT = 6379
+SESSION_REDIS_DB = 10
+SESSION_REDIS_PASSWORD = ''
+SESSION_REDIS_PREFIX = 'session'

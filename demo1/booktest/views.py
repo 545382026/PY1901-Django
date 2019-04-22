@@ -1,7 +1,8 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import Bookinfo,HeroInfo, AreaInfo
 from django.template import loader
+import datetime
 # Create your views here.
 
 # 定义视图函数
@@ -10,16 +11,37 @@ def index(request):
     # 加载模板
     # indextem = loader.get_template('booktest/index.html')
     # # 使用变量渲染模板
-    con = {'username':'yang teng'}
+    # con = {'username':'yang teng'}
     # result = indextem.render(con)
     # # 返回模板
     # return HttpResponse(result)
     # 快捷方式
-    return render(request,'booktest/index.html',con)
+    # res = request.COOKIES.get('username')
+    return render(request,'booktest/index.html',{'username':request.session.get('username')})
+
+
+
+def login(request):
+    if request.method == 'GET':
+        return render(request,'booktest/login.html')
+    elif request.method == 'POST':
+        username = request.POST['username']
+        request.session['username'] = username
+        return redirect(reverse('booktest:index'))
+
+
+def logout(request):
+    request.session.clear()
+    return redirect(reverse('booktest:index'))
+
+
 
 def list(request):
+
     book = Bookinfo.objects.all()
-    return render(request,'booktest/list.html',{'booklist':book})
+    res = render(request,'booktest/list.html',{'booklist':book})
+    # res.set_cookie('username','yang',expires=datetime.datetime.now()+datetime.timedelta(days=10))
+    return res
 
 def detail(request,id):
     # try:
