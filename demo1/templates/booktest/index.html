@@ -10,16 +10,18 @@
 <body>
 
     <div class="container">
-        {% if username%}
-            <h2>{{username}}</h2>>
-            <br>
+        {% if request.user.username  %}
+            <h2>{{ user.username }}</h2>
 {#          <a href="/booktest/list/">列表页</a>#}
+            <a href="{% url 'booktest:list' %}">列表页</a>
+            <br>
             <a href="{% url 'booktest:logout' %}">退出登录</a>
+            <br>
         {% else %}
             <a href="{% url 'booktest:login' %}">登录</a>
             <br>
         {% endif %}
-            <a href="{% url 'booktest:list' %}">列表页</a>
+
     </div>
     {#        <img src="/static/img/1.png" alt="没有图片">#}
      <img src="{% static 'img/1.png' %}" class="img1" alt="图片正在加载">

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+</head>
+<body>
+    <h1>登录</h1>
+    <form action="{% url 'extendtest:login' %}" method="post">
+        {% csrf_token %}
+        {{ form.username }}
+        <br>
+        {{ form.password }}
+        <br>
+    {#    <input type="text" name="uname" >#}
+        <input type="submit" value="注册">
+    </form>
+</body>
+</html>

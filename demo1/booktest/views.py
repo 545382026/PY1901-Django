@@ -1,11 +1,14 @@
-from django.shortcuts import render,redirect, reverse
+from django.shortcuts import render,redirect, reverse, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import Bookinfo,HeroInfo, AreaInfo
+from .models import Bookinfo,HeroInfo, AreaInfo,MyUser
+from django.contrib.auth import authenticate, login as lgi, logout as lgo
+from .util import checklogin
 from django.template import loader
 import datetime
 # Create your views here.
 
 # 定义视图函数
+# @checklogin
 def index(request):
     # return HttpResponse('首页')
     # 加载模板
@@ -17,22 +20,66 @@ def index(request):
     # return HttpResponse(result)
     # 快捷方式
     # res = request.COOKIES.get('username')
-    return render(request,'booktest/index.html',{'username':request.session.get('username')})
 
+    # 登录功能
+    # username = request.session.get('username')
+    # is_ok = request.user.is_authenticated
+    # print(username, is_ok, locals())
+    return render(request,'booktest/index.html', locals())
+
+    # HttpResponse 对象
+    # response = HttpResponse()
+    # if 'h1' in request.COOKIES.keys():
+    #     response.write('<h1>一级标题<h1>')
+    # response.set_cookie('h1', 500)
+    # return response
 
 
 def login(request):
     if request.method == 'GET':
         return render(request,'booktest/login.html')
-    elif request.method == 'POST':
-        username = request.POST['username']
-        request.session['username'] = username
-        return redirect(reverse('booktest:index'))
+    # elif request.method == 'POST':
+    #     username = request.POST['username']
+    #     request.session['username'] = username
+    #     return redirect(reverse('booktest:index'))
+    else:
+        username = request.POST.get('username')
+        pwd = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=pwd )
+        if user:
+            # request.session['username'] = username
+            lgi(request, user)
+            return redirect(reverse('booktest:index'))
+        else:
+            return render(request, 'booktest/login.html', {"error": "用户名或者密码错误"})
+
+
+def register(request):
+    if request.method == 'POST':
+        username = request.POST.get('account')
+        pwd = request.POST.get('confirm')
+        pwd2 = request.POST.get('confirm2')
+        error = None
+        try:
+            error = '用户已存在'
+            if MyUser.objects.filter(username=username):
+                return render(request, 'booktest/login.html', {'error': error})
+        except:
+            if pwd != pwd2:
+                error = '密码不一致'
+                return render(request, 'booktest/login.html', {'error':error})
+            else:
+                MyUser.objects.create_user(username=username, password=pwd, url='http://yang.com')
+                return redirect(reverse('booktest:login'))
+
+
 
 
 def logout(request):
-    request.session.clear()
-    return redirect(reverse('booktest:index'))
+    res = redirect(reverse('booktest:index'))
+    lgo(request)
+    return res
 
 
 
@@ -54,13 +101,14 @@ def detail(request,id):
     return render(request, 'booktest/detail.html', {'booklist':book})
 
 def delete(request,id):
-    Bookinfo.objects.get(pk=id).delete()
-    # b1 = Bookinfo.objects.all()
+    # Bookinfo.objects.get(pk=id).delete()
+    b1 = get_object_or_404(Bookinfo, pk=id)
+    b1.delete()
+    b1.BookInfo.objects.all()
     # return render(request, 'booktest/list.html', {'booklist': b1})
     # 重定向，刷新当前页面
-    return HttpResponseRedirect('/booktest/list')
-    # return HttpResponse("删除成功")
-    # return redirect(reversed('booktest:list'),{'booklist':b1})
+    return HttpResponseRedirect('/booktest/list', {'booklist':b1})
+    # return redirect(reverse('booktest:list'))
 
 def addhero(request, id):
     return render(request,'booktest/addhero.html', {'bookid': id})
